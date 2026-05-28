@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="VeritasCo Recheck Sheet Tool — Generate professional recheck application sheets with PDF export">
+  <title>VeritasCo — Recheck Sheet Tool</title>
+  <link rel="icon" href="./public/veritasco.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+  <!-- jsPDF for PDF generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js" crossorigin="anonymous"></script>
+  <script>
+    // Fallback: if CDN fails, try alternate CDN
+    if (!window.jspdf) {
+      document.write('<script src="https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"><\/script>');
+    }
+  </script>
+</head>
+<body>
+
+  <!-- ═══════════ HEADER ═══════════ -->
+  <header class="app-header">
+    <div class="logo-wrap">
+      <img src="./public/veritasco.png" alt="VeritasCo">
+      <span>VeritasCo</span>
+    </div>
+    <div class="step-pills">
+      <div class="step-pill active" id="pill-1">
+        <span class="num">1</span> Details
+      </div>
+      <div class="step-pill" id="pill-2">
+        <span class="num">2</span> Recheck Sheet
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════ MAIN ═══════════ -->
+  <main class="main">
+
+    <!-- ──── PAGE 1 — ENTRY ──── -->
+    <section class="page active" id="page-entry">
+      <div class="entry-wrapper">
+        <div class="entry-card">
+          <h1 class="section-title">Recheck Application</h1>
+          <p class="section-sub">Enter student details and subjects to begin creating the recheck sheet.</p>
+
+          <div class="field-group">
+            <label for="student-name">Student Name</label>
+            <input type="text" id="student-name" placeholder="e.g. Rahul Sharma" autocomplete="off">
+          </div>
+
+          <div class="divider"></div>
+
+          <label>Subjects</label>
+          <div id="subjects-list" class="subjects-list"></div>
+
+          <div class="add-subject-row">
+            <input type="text" id="subject-input" placeholder="e.g. Physics, Chemistry, Mathematics…" autocomplete="off">
+            <button class="btn btn-outline btn-sm" id="add-subject-btn">+ Add</button>
+          </div>
+
+          <div class="divider"></div>
+
+          <button class="btn btn-primary btn-full" id="proceed-btn">
+            Continue to Recheck Sheet →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──── PAGE 2 — SHEET ──── -->
+    <section class="page" id="page-sheet">
+
+      <!-- Header Bar -->
+      <div class="sheet-header">
+        <div class="sheet-meta">
+          <h2>📋 <span id="sheet-name">—</span></h2>
+          <p>Fill in the question-wise recheck details per subject below.</p>
+        </div>
+        <div class="sheet-actions">
+          <button class="btn btn-outline btn-sm" id="back-btn">← Back</button>
+          <button class="btn btn-success btn-sm" id="export-pdf-btn">📄 Export PDF</button>
+        </div>
+      </div>
+
+      <!-- Subject Tabs -->
+      <div id="subject-tabs" class="subject-tabs"></div>
+
+      <!-- Table Panel -->
+      <div class="table-panel">
+        <!-- Watermark -->
+        <div class="table-watermark">
+          <img src="./public/veritasco.png" alt="">
+        </div>
+
+        <div class="table-panel-inner">
+          <!-- Toolbar -->
+          <div class="table-toolbar">
+            <span class="subject-name" id="current-subject">—</span>
+            <span class="row-count" id="row-count">0 questions</span>
+          </div>
+
+          <!-- Table -->
+          <div style="overflow-x:auto;">
+            <table class="recheck-table">
+              <thead>
+                <tr>
+                  <th style="width:44px">#</th>
+                  <th>Question No</th>
+                  <th>Page No</th>
+                  <th>Marks Awarded</th>
+                  <th>Claimed Marks</th>
+                  <th>Reason</th>
+                  <th style="width:44px"></th>
+                </tr>
+              </thead>
+              <tbody id="table-body"></tbody>
+            </table>
+          </div>
+
+          <!-- Footer -->
+          <div class="table-footer">
+            <button class="btn btn-outline btn-sm" id="add-row-btn">+ Add Question</button>
+            <span style="font-size:.78rem;color:var(--text-dim)">Fill all fields for accurate PDF export</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="summary-bar">
+        <div class="summary-card">
+          <div class="label">Total Marks Awarded</div>
+          <div class="value" id="total-awarded">0</div>
+        </div>
+        <div class="summary-card">
+          <div class="label">Total Claimed Marks</div>
+          <div class="value" id="total-claimed">0</div>
+        </div>
+        <div class="summary-card">
+          <div class="label">Subjects</div>
+          <div class="value" id="total-subjects">0</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════ TOAST ═══════════ -->
+  <div id="toast" class="toast"></div>
+
+  <!-- ═══════════ PDF OVERLAY ═══════════ -->
+  <div id="pdf-overlay">
+    <div class="pdf-spinner">
+      <div class="ring"></div>
+      <p>Generating PDF…</p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
